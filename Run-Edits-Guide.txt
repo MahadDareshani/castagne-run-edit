@@ -1,0 +1,48 @@
+#1. In 'Variables' state, make a variable :-
+
+var canRun int() = 1
+
+#2. Override 'Grounded_StartDashHelper' and replace all the code with this :-
+
+_Category(Movement/Dashes/Helper)
+_Helper()
+
+IForwardPress:
+	VMOVE_Dashes_FramesSinceInputF<=MOVE_Dashes_DoubleTapTime:	
+		VcanRun:
+			VMOVE_Dashes_CanRun:
+				Transition(RunStart)
+			else
+				VMOVE_Dashes_CanStepDash:
+					Transition(StepDash)
+				endif
+			endif
+		endif
+	endif
+else
+	IBackPress:
+		VMOVE_Dashes_CanBackdash:
+			VMOVE_Dashes_FramesSinceInputB<=MOVE_Dashes_DoubleTapTime:	
+				Transition(Backdash)
+			endif
+		endif
+	endif
+endif
+
+#3. Override 'NeutralStateCommon' and replace all its code with this :-
+
+CallParent(NeutralStateCommon)
+
+F8+:
+	Set(canRun, 1)
+endif
+
+#4. Override 'StandingNeutralState' and replace all its code with this :-
+
+CallParent(StandingNeutralState)
+
+VcanRun:
+	InputTransition(5454, Backdash)
+endif
+
+# And thats it, have fun! :D
